@@ -1,0 +1,58 @@
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    
+    Dim ret As VbMsgBoxResult
+    Dim currentWs As Worksheet
+    Dim wsWork As Worksheet
+    
+    
+    If Target.Column = 1 Then
+    
+        ret = MsgBox("Voulez vous créer ?")
+        
+        If ret = vbOK Then
+            
+            Sheets.Add(, Sheets(Sheets.Count)).Name = "Antenne_" + Target
+            
+            Dim trouve As Boolean
+            Dim Count As Integer
+            
+            Dim dict As Object 'Declare a generic Object reference
+            Set dict = CreateObject("Scripting.Dictionary")
+            Dim r As Integer: r = 1
+            Do
+                If Cells(r, 1) = Target Then
+                  trouve = True
+                End If
+                
+                If trouve = True Then
+            
+                    Dim colKey As String: colKey = "A"
+                    Dim key, val
+                    key = "Key:" + colKey + "," + CStr(r): val = Cells(r, 4)
+                    'Add item to VBA Dictionary
+                    If Not dict.Exists(key) Then
+                        dict.Add key, val
+                    End If
+                End If
+                
+                r = r + 1
+            
+            Loop While r < 5000
+            
+            
+            Dim i As Integer: i = 1
+            
+            Do
+
+                Dim ckey As String: ckey = "A"
+                
+                
+                Worksheets("Antenne_" + Target).Cells(i, 1).Value = dict("Key:" + ckey + "," + CStr(i))
+                
+                i = i + 1
+            Loop While (i < r)
+     End If
+        
+    End If
+    
+End Sub
